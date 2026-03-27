@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Style Up Fashion Store</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#ffe6f2;
+}
+
+header{
+background:#ff3399;
+color:white;
+text-align:center;
+padding:25px;
+}
+
+.products{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+padding:20px;
+}
+
+.product{
+background:white;
+border-radius:10px;
+padding:15px;
+text-align:center;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+.product img{
+width:100%;
+border-radius:10px;
+}
+
+button{
+padding:10px 15px;
+border:none;
+border-radius:6px;
+margin:5px;
+cursor:pointer;
+}
+
+.order{
+background:#25D366;
+color:white;
+}
+
+.delete{
+background:red;
+color:white;
+}
+
+.add-product{
+text-align:center;
+padding:30px;
+background:white;
+}
+
+input{
+padding:10px;
+margin:5px;
+width:250px;
+}
+
+#dropArea{
+border:2px dashed #ff3399;
+padding:20px;
+width:260px;
+margin:auto;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Style Up Fashion Store</h1>
+<p>Ladies Wear & Stylish Bags</p>
+</header>
+
+<section class="products" id="productList">
+
+<div class="product">
+<img src="https://images.unsplash.com/photo-1520975928316-56a58f8c6bcb">
+<h3>Elegant Ladies Dress</h3>
+<p>GH₵150</p>
+
+<button class="order" onclick="orderProduct('Elegant Ladies Dress')">
+Order on WhatsApp
+</button>
+
+<button class="delete" onclick="deleteProduct(this)">
+Delete
+</button>
+
+</div>
+
+</section>
+
+<section class="add-product">
+
+<h2>Add Product</h2>
+
+<input id="name" placeholder="Product Name"><br>
+<input id="price" placeholder="Price"><br><br>
+
+<div id="dropArea">
+Drag & Drop Image Here or Paste Image
+</div>
+
+<br>
+
+<button onclick="addProduct()">Add Product</button>
+
+</section>
+
+<script>
+
+let imageData="";
+
+const dropArea=document.getElementById("dropArea");
+
+dropArea.addEventListener("dragover",function(e){
+e.preventDefault();
+});
+
+dropArea.addEventListener("drop",function(e){
+
+e.preventDefault();
+
+let file=e.dataTransfer.files[0];
+
+let reader=new FileReader();
+
+reader.onload=function(event){
+
+imageData=event.target.result;
+
+dropArea.innerHTML="<img src='"+imageData+"' width='200'>";
+
+};
+
+reader.readAsDataURL(file);
+
+});
+
+
+document.addEventListener("paste",function(e){
+
+let items=e.clipboardData.items;
+
+for(let item of items){
+
+if(item.type.indexOf("image")!==-1){
+
+let file=item.getAsFile();
+
+let reader=new FileReader();
+
+reader.onload=function(event){
+
+imageData=event.target.result;
+
+dropArea.innerHTML="<img src='"+imageData+"' width='200'>";
+
+};
+
+reader.readAsDataURL(file);
+
+}
+
+}
+
+});
+
+
+function addProduct(){
+
+let name=document.getElementById("name").value;
+let price=document.getElementById("price").value;
+
+let product=`
+<div class="product">
+<img src="${imageData}">
+<h3>${name}</h3>
+<p>${price}</p>
+
+<button class="order" onclick="orderProduct('${name}')">
+Order on WhatsApp
+</button>
+
+<button class="delete" onclick="deleteProduct(this)">
+Delete
+</button>
+
+</div>
+`;
+
+document.getElementById("productList").innerHTML+=product;
+
+}
+
+
+function deleteProduct(button){
+button.parentElement.remove();
+}
+
+
+function orderProduct(product){
+
+let phone="233257176771";
+
+let message="Hello, I want to order the "+product;
+
+let url="https://wa.me/"+phone+"?text="+encodeURIComponent(message);
+
+window.open(url);
+
+}
+
+</script>
+
+</body>
+</html>
